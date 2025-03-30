@@ -18,14 +18,11 @@ images_dir = os.path.join(get_project_root(),'data/Images')
 
 
 
-transform = transforms.Compose([
-    transforms.Resize((299, 299)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-])
+
 
 class CustomDataset(Dataset):
     def __init__(self, path):
+
         df = pd.read_csv(path, delimiter=',')
         self.data = df['image']
         self.labels = df['caption']
@@ -34,9 +31,14 @@ class CustomDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
+        transform = transforms.Compose([
+            transforms.Resize((299, 299)),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        ])
+
         img_path = os.path.join(images_dir, self.data[index])
         image = transform(Image.open(img_path))
-
         label = text_processing.caption_preprocessing(self.labels[index])
         return image, label
 
