@@ -10,7 +10,7 @@ import fasttext.util
 import torch.nn as nn
 fasttext.util.download_model("vi", if_exists="ignore")
 
-batch_size = 128
+batch_size = 2
 epochs = 100
 patience = 5
 learning_rate = 0.001
@@ -44,18 +44,32 @@ stopping_counter = 0
 for epoch in range(epochs):
     image_caption_model.train()
     total_train_loss = 0
-    for image, input, target in train_dataloader:
-        # image (batch_size, 3, 299, 299)
-        # input (batch_size, max_length - 1, max_length)
-        # target (batch_size, max_length - 1)
-
-        image, input, target = image.to(device), input.to(device), target.to(device)
-        output = image_caption_model(image, input)
-
-        target = target.reshape(-1)
-        output = output.reshape(-1, vocab.vocab_size)
-
-        loss = criterion(output, target)
+    # for images, inputs, targets in train_dataloader:
+    #     # image (batch_size, 3, 299, 299)
+    #     # input (batch_size, max_length - 1, max_length)
+    #     # target (batch_size, max_length - 1)
+    #     optimizer.zero_grad()
+    #     images, inputs, targets = images.to(device), inputs.to(device), targets.to(device)
+    #     outputs = image_caption_model(images, inputs)
+    #
+    #     target = targets.reshape(-1)
+    #     output = inputs.reshape(-1, vocab.vocab_size)
+    #
+    #     loss = criterion(output, target)
+    #     loss.backward()
+    #     optimizer.step()
+    #
+    #     total_train_loss += loss.item()
+    for image, captions in train_dataloader:
+        image, captions = image.to(device), captions.to(device)
+        print(image.shape, captions.shape)
+        optimizer.zero_grad()
+        output = image_caption_model(image, captions)  # (batch_size, max_length-1, vocab_size)
+        print(output.shape)
+        target = captions[:, 1:]  # Bỏ <START>, dự đoán từ từ thứ 2 đến cuối
+        print(target.shape)
+        loss = criterion(output.reshape(-1, vocab.vocab_size), target.reshape(-1))
+        print(loss.item())
         loss.backward()
         optimizer.step()
         total_train_loss += loss.item()
@@ -65,14 +79,16 @@ for epoch in range(epochs):
     image_caption_model.eval()
     total_test_loss = 0
     with torch.no_grad():
-        for image, input, target in test_dataloader:
+        for images, inputs, targets in test_dataloader:
 
-            image, input, target = image.to(device), input.to(device), target.to(device)
-            output = image_caption_model(image, input)
-            target = target.reshape(-1)
-            output = output.reshape(-1, vocab.vocab_size)
-            loss = criterion(output, target)
+            images, inputs, targets = images.to(device), inputs.to(device), targets.to(device)
+            output = image_caption_model(images, input)
+            targets = targets.reshape(-1)
+            outputs = outputs.reshape(-1, vocab.vocab_size)
+            loss = criterion(output, targets)
+
             total_test_loss += loss.item()
+
     avg_test_loss = total_test_loss / len(test_dataloader)
     print(f"Epoch {epoch+1}/{epochs} train loss :{avg_train_loss} test loss: {avg_test_loss}")
 

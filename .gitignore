@@ -5,3 +5,5 @@ data/ktvic_dataset
 cc.vi.300.bin
 cc.vi.300.bin.gz
 best_model.pth
+data/train_data_preprocessed.pkl
+data/test_data_preprocessed.pkl

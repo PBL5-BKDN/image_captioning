@@ -35,20 +35,24 @@ class ImageCaptionDataset(Dataset):
         caption_tokens = caption_tokens[:self.max_length]
         caption_tokens += [self.pad_idx] * (self.max_length - len(caption_tokens))
 
-        input_sequences = []
-        target_sequences = []
-        for i in range(1, self.max_length):
-            in_seq = caption_tokens[:i]
-            out_seq = caption_tokens[i]
-            in_seq = in_seq + [self.pad_idx] * (self.max_length - len(in_seq))
-            input_sequences.append(in_seq)
-            target_sequences.append(out_seq)
+        # input_sequences = []
+        # target_sequences = []
+        # for i in range(1, self.max_length):
+        #     in_seq = caption_tokens[:i]
+        #     out_seq = caption_tokens[i]
+        #     in_seq = in_seq + [self.pad_idx] * (self.max_length - len(in_seq))
+        #     input_sequences.append(in_seq)
+        #     target_sequences.append(out_seq)
+        # Input là caption[:-1], target là caption[1:]
+
+        input_sequence = torch.tensor(caption_tokens, dtype=torch.long)
+        target_sequence = torch.tensor(caption_tokens, dtype=torch.long)
 
         image_path = data["image_path"]
         image = Image.open(image_path).convert("RGB")
         image = self.transform(image)
 
-        return image, torch.tensor(input_sequences, dtype=torch.long), torch.tensor(target_sequences, dtype=torch.long)
+        return image, input_sequence
 
 
 
