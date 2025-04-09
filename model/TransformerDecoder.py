@@ -8,7 +8,6 @@ class TransformerDecoder(nn.Module):
     def __init__(self,w2i, glove_tensor, units, embed_dim = 300, num_heads= 4, vocab_size=10000, max_len = 50):
         super(TransformerDecoder, self).__init__()
         self.vocab_size = vocab_size
-        self.embedding = Embedding(w2i,glove_tensor, embed_dim, vocab_size=vocab_size, max_len_seq=max_len)
 
         self.attention_1 = nn.MultiheadAttention(embed_dim, num_heads, dropout=0.1, batch_first=True)
         self.layer_norm_1 = nn.LayerNorm(embed_dim, eps=1e-5)
@@ -41,19 +40,14 @@ class TransformerDecoder(nn.Module):
 
 
 
-    def forward(self, input_ids, encoder_output, mask = None):
+    def forward(self, embeddings, encoder_output, mask = None):
         """
         :param input_ids: tensor of shape (B, MAX_SEQUENCE_LENGTH)
         :param encoder_output:
         :param mask:
         :return:
         """
-
-
-        embeddings = self.embedding(input_ids) # (batch, seq_len, embed_dim)
-
         seq_len = embeddings.size(1)
-
 
         # Tạo causal mask với kích thước (seq_len, seq_len)
         causal_mask = torch.tril(torch.ones((seq_len, seq_len), device=embeddings.device))

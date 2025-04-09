@@ -71,7 +71,7 @@ BATCH_SIZE = 256
 
 learning_rate = 0.001
 epochs = 50
-patience = 3
+patience = 5
 min_delta = 0.001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -102,15 +102,15 @@ train_dataset = CustomDataset(
 
 
 def collate_fn(batch):
-    images, caption_tokens = zip(*batch)
+    images, transformed_image, caption_tokens = zip(*batch)
     caption_tokens = torch.stack(caption_tokens, dim=0)  # (B, max_length)
 
     # Tách input và target
     input_sequences = caption_tokens[:, :-1].clone().detach() # BỎ END
     target_sequences = caption_tokens[:, 1:].clone().detach() # BỎ START
-    images = torch.stack(images, dim=0)
+    transformed_image = torch.stack(transformed_image, dim=0)
 
-    return images, input_sequences, target_sequences
+    return transformed_image, input_sequences, target_sequences
 
 test_dataloader = DataLoader(
     test_dataset,
