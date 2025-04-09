@@ -6,11 +6,30 @@ import torchvision.models as models
 import fasttext.util
 
 
+class Attention(nn.Module):
+    """Bahdanau Attention Mechanism"""
+    def __init__(self, hidden_size):
+        super(Attention, self).__init__()
+        self.attn = nn.Linear(hidden_size * 2, hidden_size)
+        self.v = nn.Linear(hidden_size, 1, bias=False)
+
+    def forward(self, hidden, encoder_outputs):
+        """
+        hidden: (batch_size, hidden_size)
+        encoder_outputs: (batch_size, seq_len, hidden_size)
+        """
+        seq_len = encoder_outputs.size(1)
+        hidden = hidden.unsqueeze(1).repeat(1, seq_len, 1)  # (batch_size, seq_len, hidden_size)
+        energy = torch.tanh(self.attn(torch.cat((hidden, encoder_outputs), dim=2)))  # (batch_size, seq_len, hidden_size)
+        attention_weights = torch.softmax(self.v(energy), dim=2)  # (batch_size, seq_len, 1)
+        context = torch.sum(attention_weights * encoder_outputs, dim=1)  # (batch_size, hidden_size)
+        return context, attention_weights
 
 class ImageCaptioningModel(nn.Module):
-    def __init__(self, vocab_size=5000, image_feature_size=2048, hidden_size=256, vocab=None):
+    def __init__(self, vocab_size=5000, image_feature_size=2048, hidden_size=256,num_layers=2, vocab=None):
         self.vocab = vocab
-
+        self.num_layers = num_layers
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         super(ImageCaptioningModel, self).__init__()
         model_inception_v3 = models.inception_v3(weights=Inception_V3_Weights.DEFAULT)
         model_inception_v3.fc = torch.nn.Identity()  # Giữ lại feature vector trước lớp fully connected
@@ -18,103 +37,71 @@ class ImageCaptioningModel(nn.Module):
         self.inception_v3 = model_inception_v3
         self.image_encoder = nn.Sequential(
             nn.Linear(image_feature_size, hidden_size),
-            nn.Dropout(0.5),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.Dropout(0.4),
         )
 
-        self.special_token_embedding = nn.Embedding(vocab.vocab_size, 300)
+        # Embedding cho special tokens
+        self.special_token_embedding = nn.Embedding(len(vocab.special_tokens), 300)
         self.ft = fasttext.load_model("cc.vi.300.bin")
         self.caption_projection = nn.Linear(300, hidden_size)
 
-        self.caption_lstm = nn.LSTM(input_size=hidden_size, hidden_size=hidden_size, num_layers=1, batch_first=True)
+        self.attention = Attention(hidden_size)
+
+        self.caption_lstm = nn.LSTM(input_size=hidden_size, hidden_size=hidden_size, num_layers=self.num_layers,
+                                    batch_first=True, dropout=0.5, bidirectional=False)
+
+        self.layer_norm = nn.LayerNorm(hidden_size)
 
         self.fc = nn.Linear(hidden_size, vocab_size)
 
+    def get_embedding(self, caption_tokens):
+        batch_size, max_length = caption_tokens.shape
+        embeddings = torch.zeros(batch_size, max_length, 300, device=self.device)
 
+        for i in range(batch_size):
+            for j in range(max_length):
+                token_id = caption_tokens[i, j].item()
+                word = self.vocab.i2w[token_id]
 
+                if word in self.vocab.special_tokens:
+                    token_index = self.vocab.special_tokens.index(word)
+                    embed = self.special_token_embedding.weight[token_index]
+                else:
+                    embed = torch.tensor(self.ft.get_word_vector(word), dtype=torch.float32, device=self.device)
 
-    def embed_caption(self, caption_tokens):
-        batch_embeddings = []
+                embeddings[i, j] = embed
 
-        for batch in caption_tokens:
-            sentence_embeddings = []
-            for input in batch:
-                word_embeddings = []
-                for token_id in input:
-                    token = self.vocab.i2w[token_id.item()]
-                    if token in self.vocab.special_tokens:
-                        emb = self.special_token_embedding(torch.tensor(
-                            [self.vocab.w2i[token]],
-                            device=self.special_token_embedding.weight.device)
-                        ).squeeze(0)
-                    else:
-                        emb = torch.Tensor(
-                            self.ft.get_word_vector(token)
-                        ).to(self.special_token_embedding.weight.device)
-                    word_embeddings.append(emb)
+        return embeddings
 
-                # Convert word_embeddings list thành tensor (seq_len, 300)
-                sentence_embeddings.append(torch.stack(word_embeddings, dim=0))
-
-            # Convert sentence_embeddings list thành tensor (batch_size, seq_len, 300)
-            batch_embeddings.append(torch.stack(sentence_embeddings, dim=0))
-
-        # Convert batch_embeddings list thành tensor (batch_size, seq_len, 300)
-        return torch.stack(batch_embeddings, dim=0)
 
     def forward(self, images, captions):
         """
        image: (batch_size, 3, 299, 299)
-       caption_tokens: (batch_size,(num_seq) seq_len-1, seq_len)
+       caption_tokens: (batch_size, seq_len)
        """
-        # # Embedding cho caption
-        # caption_embedding = self.embed_caption(captions) #(batch_size, num_sequences, seq_len, 300)
-        # batch_size, num_sequences, seq_len, token_dim = caption_embedding.shape
-        # caption_embedding = caption_embedding.view(batch_size * num_sequences, seq_len, token_dim)
-        #
-        # caption_embedding = self.caption_projection(caption_embedding)  # (batch_size * num_sequences, seq_len, hidden_size)
-        #
-        # self.inception_v3.eval()
-        # with torch.no_grad():
-        #     features = self.inception_v3(images)
-        #     if isinstance(features, tuple):
-        #         features = features[0]  # Chỉ lấy feature chính nếu output là tuple (batch_size, 2048)
-        #
-        # # Encode ảnh
-        # image_embedding = self.image_encoder(features)  # (batch_size, hidden_size)
-        #
-        # image_embedding = image_embedding.unsqueeze(1)  # (batch_size, 1, hidden_size)
-        #
-        # image_embedding = image_embedding.repeat(1, num_sequences, 1).view(batch_size * num_sequences, 1, -1)  # (batch_size * num_sequences, 1, hidden_size)
-        #
-        #
-        # # Kết hợp ảnh và caption
-        # lstm_input = torch.cat((image_embedding, caption_embedding), dim=1)  # (batch_size, seq_len+1, hidden_size)
-        #
-        # # Đưa vào LSTM
-        # lstm_out, _ = self.caption_lstm(lstm_input)  # (batch_size, seq_len+1, hidden_size)
-        #
-        # # Dự đoán từ tiếp theo tại mỗi bước
-        # output = self.fc(lstm_out)  # (batch_size, seq_len+1, vocab_size)
-        #
-        # return output[:, -1:, :]  # Loại bỏ bước đầu tiên (ảnh) để dự đoán từ tiếp theo
-        #
-        #
-        #
-        # return outputs
+
         with torch.no_grad():
             features = self.inception_v3(images)  # (batch_size, 2048)
             if isinstance(features, tuple):
                  features = features[0]
         image_embedding = self.image_encoder(features)  # (batch_size, hidden_size)
-        h0 = image_embedding.unsqueeze(0)  # (1, batch_size, hidden_size)
-        c0 = torch.zeros_like(h0)  # (1, batch_size, hidden_size)
 
-        # Chuẩn bị input cho LSTM (teacher forcing)
-        caption_embedding = self.special_token_embedding(captions[:, :-1])  # (batch_size, max_length-1, embed_size)
+        num_directions = 2 if self.caption_lstm.bidirectional else 1
+        h0 = image_embedding.unsqueeze(0).repeat(self.num_layers * num_directions, 1, 1)
+        c0 = torch.zeros_like(h0)
+
+        caption_embedding = self.get_embedding(captions)
+
         caption_embedding = self.caption_projection(caption_embedding)  # (batch_size, max_length-1, hidden_size)
 
-        # Đưa qua LSTM
+
         lstm_out, _ = self.caption_lstm(caption_embedding, (h0, c0))  # (batch_size, max_length-1, hidden_size)
+
+        context, _ = self.attention(image_embedding, lstm_out)
+
+        lstm_out = self.layer_norm(lstm_out + context.unsqueeze(1))
+
         output = self.fc(lstm_out)  # (batch_size, max_length-1, vocab_size)
+
         return output

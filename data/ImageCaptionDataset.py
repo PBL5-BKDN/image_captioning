@@ -3,23 +3,14 @@ from PIL import Image
 from torch.utils.data import Dataset
 import pickle
 
-from torchvision.transforms import transforms
-
-
-
-
 class ImageCaptionDataset(Dataset):
-    def __init__(self, path, word2idx, max_length):
+    def __init__(self, path, word2idx, max_length, transform=None):
         with open(path, "rb") as f:
             self.data = pickle.load(f)
             self.word2idx = word2idx
             self.max_length = max_length
             self.pad_idx = word2idx["<PAD>"]  # token padding
-            self.transform = transforms.Compose([
-                transforms.Resize((299, 299)),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
+            self.transform = transform
 
     def __len__(self):
         return len(self.data)
@@ -35,18 +26,7 @@ class ImageCaptionDataset(Dataset):
         caption_tokens = caption_tokens[:self.max_length]
         caption_tokens += [self.pad_idx] * (self.max_length - len(caption_tokens))
 
-        # input_sequences = []
-        # target_sequences = []
-        # for i in range(1, self.max_length):
-        #     in_seq = caption_tokens[:i]
-        #     out_seq = caption_tokens[i]
-        #     in_seq = in_seq + [self.pad_idx] * (self.max_length - len(in_seq))
-        #     input_sequences.append(in_seq)
-        #     target_sequences.append(out_seq)
-        # Input là caption[:-1], target là caption[1:]
-
         input_sequence = torch.tensor(caption_tokens, dtype=torch.long)
-        target_sequence = torch.tensor(caption_tokens, dtype=torch.long)
 
         image_path = data["image_path"]
         image = Image.open(image_path).convert("RGB")

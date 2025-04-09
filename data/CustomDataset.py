@@ -1,29 +1,29 @@
+import torch
 from PIL import Image
 from torch.utils.data import Dataset
 import pandas as pd
 from torchvision.transforms import transforms
 import os
 from processing import text_processing
-def get_project_root() -> str:
-    # Get the current working directory
-    current_dir = os.getcwd()
-
-    # Traverse up to the root directory (you can adjust the number of levels as needed)
-    project_root = os.path.abspath(os.path.join(current_dir, os.pardir))
-
-    return project_root
-
-# Example usage
-images_dir = os.path.join(get_project_root(),'data/Images')
-
 
 
 
 
 class CustomDataset(Dataset):
-    def __init__(self, path):
-
+    def __init__(self, path, word2idx, max_length):
+        self.transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomRotation(degrees=20),
+            transforms.ColorJitter(contrast=0.3),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+        self.word2idx = word2idx
+        self.max_length = max_length
+        self.pad_idx = word2idx["<PAD>"]  # token padding
         df = pd.read_csv(path, delimiter=',')
+
         self.data = df['image']
         self.labels = df['caption']
         print(f"Loaded {len(self.data)} images and {len(self.labels)} captions.")
@@ -31,15 +31,18 @@ class CustomDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        transform = transforms.Compose([
-            transforms.Resize((299, 299)),
-            transforms.ToTensor(),
-            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-        ])
+        images_dir = "C:/Users/NguyenPC/Desktop/python_prj/dataset/Images"
 
         img_path = os.path.join(images_dir, self.data[index])
-        image = transform(Image.open(img_path))
-        label = text_processing.caption_preprocessing(self.labels[index])
-        return image, label
+        image = Image.open(img_path).convert('RGB')
+        image_transformed = self.transform(image)
+
+        label = self.labels[index]
+
+        caption_tokens = [self.word2idx.get(token, self.word2idx["<UNK>"]) for token in label.split()]
+        caption_tokens = caption_tokens[:self.max_length]
+        caption_tokens += [self.pad_idx] * (self.max_length - len(caption_tokens))
+        input_sequence = torch.tensor(caption_tokens, dtype=torch.long)
+        return image, image_transformed, input_sequence
 
 
