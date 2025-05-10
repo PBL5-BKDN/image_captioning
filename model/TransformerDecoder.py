@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 
-from model.Embedding import Embedding
+
 
 
 class TransformerDecoder(nn.Module):
