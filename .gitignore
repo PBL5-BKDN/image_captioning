@@ -7,7 +7,8 @@ cc.vi.300.bin.gz
 best_model.pth
 data/train_data_preprocessed.pkl
 data/test_data_preprocessed.pkl
-dataset/*
+dataset/flick8k/Images
+dataset/stanford_Image_Paragraph_Captioning_dataset/stanford_img
 */glove.6B
 .idea/
 .env
