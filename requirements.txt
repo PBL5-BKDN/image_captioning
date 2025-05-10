@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pillow
+pytesseract
+openai
+matplotlib
+torchvision
+matplotlib
+torch
+python-multipart

@@ -9,3 +9,5 @@ data/train_data_preprocessed.pkl
 data/test_data_preprocessed.pkl
 dataset/*
 */glove.6B
+.idea
+.env
