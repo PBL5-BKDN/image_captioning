@@ -8,3 +8,6 @@ torchvision
 matplotlib
 torch
 python-multipart
+pandas
+matplotlib
+nltk
