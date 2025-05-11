@@ -17,8 +17,6 @@ class ImageCaptionDataset(Dataset):
 
     def __getitem__(self, idx):
         data = self.data[idx]
-
-
         #Chuyển caption thành index
         caption = data["segment_caption"]
         caption_tokens = [self.word2idx.get(token, self.word2idx["<UNK>"]) for token in caption.split()]

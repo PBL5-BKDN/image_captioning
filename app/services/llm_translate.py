@@ -1,24 +1,46 @@
-from openai import OpenAI
+import requests
 
-from settings import OPENAI_API_KEY
+def call_openrouter(prompt, model="meta-llama/llama-3.1-8b-instruct:free"):
+    headers = {
+        "Authorization": "Bearer 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",
+        "HTTP-Referer": "PBL5",  # Thay tên dự án nếu cần
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+    try:
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        print("❌ Error:", e)
+        print("Response:", response.text)
+        return "Lỗi khi gọi API."
 
-
-def correct_and_translate(text):
+# ===== 1. English sentence => Summarize + Polish => Translate to Vietnamese =====
+def polish_and_translate(sentence_en):
     prompt = (
-        "Tôi sẽ gửi cho bạn một đoạn văn bản tiếng Anh.\n"
-        "Bạn hãy sửa ngữ pháp, chính tả và làm cho câu văn trôi chảy hơn.\n"
-        "Sau đó, hãy dịch đoạn văn bản đã chỉnh sửa sang tiếng Việt.\n\n"
-        f"Văn bản: {text}\n\n"
-        "Kết quả (chỉ trả lại bản dịch tiếng Việt):"
+        "You are a helpful assistant that processes English sentences as follows:\n"
+        "Step 1: Remove any redundant or repeated content to summarize the sentence.\n"
+        "Step 2: Correct grammar, spelling, and improve fluency to make the sentence natural.\n"
+        "Step 3: Translate the cleaned and corrected sentence into Vietnamese.\n\n"
+        "⚠️ IMPORTANT: Only return the final Vietnamese translation. Do NOT explain anything. Do NOT include English text.\n\n"
+        "Example:\n"
+        "Input: a man is sitting on a table. he is wearing a black shirt. he is wearing a black shirt and black pants. the man is wearing a black shirt.\n"
+        "Output: Một người đàn ông đang ngồi trên bàn, mặc áo sơ mi đen và quần đen.\n\n"
+        f"Input:\n{sentence_en}\n"
+        f"Output:"
     )
+    return call_openrouter(prompt)
 
-    response = client.chat.completions.create(model="gpt-4o",
-                                              messages=[
-                                                  {"role": "user", "content": prompt}
-                                              ],
-                                              temperature=0.7,
-                                              max_tokens=500)
-
-    return response.choices[0].message.content.strip()
+# ===== 2. Answer general question in Vietnamese =====
+def answer_question(question_vi):
+    prompt = (
+        f"You are a helpful assistant. Please answer the following question in Vietnamese:\n"
+        f"{question_vi}"
+    )
+    return call_openrouter(prompt)

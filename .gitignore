@@ -10,5 +10,55 @@ data/test_data_preprocessed.pkl
 dataset/flick8k/Images
 dataset/stanford_Image_Paragraph_Captioning_dataset/stanford_img
 */glove.6B
-.idea/
+.idea/*
 .env
+
+dataset/coco/annotations
+dataset/coco/train2017
+dataset/coco/val2017
+
+**/__pycache__/
+
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
+
+# PyCharm/JetBrains IDE
+.idea/
+
+# Mac OS
+.DS_Store
+dataset/flickr30k/Images
+
+# Datasets
+*.csv
+*.tsv
+*.zip
+*.gz
+*.tar
+*.npy
+*.npz
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# Misc
+*.swp
+*.swo
