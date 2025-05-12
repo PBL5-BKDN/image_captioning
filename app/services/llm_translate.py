@@ -1,8 +1,13 @@
+from enum import Enum
+
 import requests
+
+from settings import WEATHER_API_KEY, LLM_API_KEY
+
 
 def call_openrouter(prompt, model="meta-llama/llama-3.1-8b-instruct:free"):
     headers = {
-        "Authorization": "Bearer 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",
+        "Authorization": f"Bearer {LLM_API_KEY}",
         "HTTP-Referer": "PBL5",  # Thay tên dự án nếu cần
         "Content-Type": "application/json"
     }
@@ -37,10 +42,87 @@ def polish_and_translate(sentence_en):
     )
     return call_openrouter(prompt)
 
-# ===== 2. Answer general question in Vietnamese =====
-def answer_question(question_vi):
+def answer_question_basic(question_vi):
     prompt = (
-        f"You are a helpful assistant. Please answer the following question in Vietnamese:\n"
+        f"Bạn là một trợ lý giọng nói dành cho người khiếm thị. Hãy trả lời câu hỏi sau bằng tiếng Việt một cách ngắn gọn, rõ ràng và thân thiện:\n"
         f"{question_vi}"
     )
     return call_openrouter(prompt)
+
+
+def answer_question_about_time_and_weather(longitude, latitude):
+    response = requests.get(f"https://api.weatherapi.com/v1/current.json?q={latitude}%{longitude}&key={WEATHER_API_KEY}")
+    data = response.json()
+
+    sys_prompt = f"""
+        Bạn là một trợ lý giọng nói dành cho người khiếm thị. Dựa trên dữ liệu thời tiết JSON dưới đây, hãy tạo một câu phản hồi ngắn gọn, dễ hiểu và thân thiện để mô tả thời tiết hiện tại cho người dùng. Hạn chế dùng từ chuyên môn, ưu tiên giọng nói tự nhiên.
+        Dữ liệu JSON: {data} 
+        Yêu cầu đầu ra:
+        - Một đoạn văn tiếng Việt mô tả thời tiết hiện tại (1–3 câu).
+        - Thân thiện, rõ ràng, dễ hiểu với người khiếm thị.
+        - Không nhắc đến đơn vị đo nếu không cần thiết.
+        - Nếu có thể, mô tả trạng thái như "trời có mây", "gió nhẹ", "độ ẩm cao", v.v."""
+    response = call_openrouter(sys_prompt)
+    return response
+
+class Intent(Enum):
+    IMAGE_DESCRIPTION = "Mô tả ảnh"
+    TIME_WEATHER = "Hỏi về ngày, giờ hoặc thời tiết"
+    INFORMATION_QUESTION = "Các câu hỏi thông tin"
+    OTHER_ACTION_REQUEST = "Yêu cầu hành động khác"
+
+def analyze_intent(question: str):
+    sys_prompt = f"""
+        Bạn là một hệ thống phân loại đầu vào cho trợ lý giọng nói hỗ trợ người khiếm thị. Người dùng có thể nói một câu bất kỳ: đó có thể là yêu cầu hoặc câu hỏi.
+        
+        Dựa vào câu đầu vào, hãy xác định **ý định chính** của người dùng và phân loại nó vào **một trong 4 nhóm sau**:
+        
+        - Mô tả ảnh (Người dùng muốn biết nội dung trong ảnh, hình ảnh đang hiển thị, hoặc nhờ mô tả ảnh)
+        - Hỏi về ngày, giờ hoặc thời tiết (Người dùng muốn biết giờ, ngày, lịch, hoặc tình hình thời tiết)
+        - Các câu hỏi thông tin (Người dùng hỏi một thông tin cụ thể khác (ví dụ: "Tổng thống Mỹ là ai?", "Hà Nội có bao nhiêu quận?", "AI là gì?"...))
+        - Yêu cầu hành động khác (Người dùng yêu cầu làm một điều gì đó không nằm trong 3 nhóm trên (ví dụ: "Nhắc tôi uống thuốc", "Mở đèn", "Gửi tin nhắn", "Đọc email"))
+        
+        **Yêu cầu:**
+        - Trả lời bằng một dòng duy nhất 1 thể loại duy nhất: "Mô tả ảnh", "Hỏi về ngày, giờ hoặc thời tiết", "Các câu hỏi thông tin", "Yêu cầu hành động khác" và không cần giải thích thêm.
+        - Không lặp lại nguyên câu người dùng.
+        - Nếu không chắc chắn giữa 2 loại, chọn loại gần nhất theo ngữ cảnh.
+        
+        Ví dụ:
+        
+        Câu: "Hôm nay trời thế nào?"
+        → Trả lời: Loại 2: Người dùng hỏi về thời tiết hiện tại.
+        
+        Câu: "Bạn có thể giúp tôi gửi tin nhắn không?"
+        → Trả lời: Loại 4: Người dùng yêu cầu trợ giúp hành động (gửi tin nhắn).
+        
+        Câu: "Trong ảnh này có gì?"
+        → Trả lời: Loại 1: Người dùng yêu cầu mô tả nội dung hình ảnh.
+        
+        Câu: "Tổng thống Mỹ là ai?"
+        → Trả lời: Loại 3: Người dùng hỏi thông tin cụ thể về tổng thống Mỹ.
+        
+        Câu hỏi/ yêu cầu của người dùng: "{question}"
+    """
+    response = call_openrouter(sys_prompt)
+    try:
+        return Intent(response.strip())
+    except ValueError:
+        print(f"❌ Error: Không thể phân loại ý định cho câu hỏi '{question}'. Phản hồi từ mô hình: {response}")
+        return Intent.OTHER_ACTION_REQUEST
+
+def answer_question_out_of_ability(question: str):
+    sys_prompt = (
+        f"Bạn là một trợ lý giọng nói dành cho người khiếm thị. Trợ lý chỉ có khả năng trả lời các câu hỏi thông tin, mô tả ảnh, hoặc cung cấp thông tin về thời tiết, ngày, giờ. "
+        f"Nếu người dùng yêu cầu thực hiện hành động khác (ví dụ: gửi tin nhắn, bật đèn, nhắc nhở), hãy trả lời một cách lịch sự và thân thiện rằng bạn không thể thực hiện yêu cầu đó.\n\n"
+        f"Câu hỏi/ yêu cầu: '{question}'\n\n"
+        "Yêu cầu đầu ra:\n"
+        "- Một câu trả lời tiếng Việt ngắn gọn, lịch sự, giải thích rằng bạn không thể thực hiện yêu cầu và nói về khả năng của mình.\n"
+        "- Ví dụ: 'Xin lỗi, mình chỉ có thể trả lời câu hỏi hoặc mô tả ảnh, không thể gửi tin nhắn được.  Tôi chỉ có thể hỗ trợ bạn về mô tả ảnh và trả lời câu hỏi.'"
+    )
+    response = call_openrouter(sys_prompt)
+    return response
+
+
+
+
+

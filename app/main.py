@@ -1,4 +1,4 @@
-from fastapi import FastAPI,File, UploadFile, Request
+from fastapi import FastAPI,File, UploadFile, Request, JSONResponse, Form
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
@@ -7,6 +7,7 @@ import os
 from app.services.extract import extract_text_from_image
 from app.services.llm_translate import polish_and_translate
 from app.services.model_loader import get_model
+from app.services.pipeline import pipeline
 
 app = FastAPI(title="Simple FastAPI Server")
 
@@ -16,31 +17,28 @@ async def root():
 
 # Upload image endpoint
 @app.post("/upload-image/")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(
+    file: UploadFile = File(...),
+    question: str = Form(...),
+    longitude: float = Form(...),
+    latitude: float = Form(...)
+):
     # Check if file is an image
     if not file.content_type.startswith("image/"):
         return JSONResponse(
             status_code=400,
             content={"message": "File must be an image"}
         )
+
     # Đọc nội dung bytes từ UploadFile
     image_bytes = await file.read()
 
-    model = get_model()
-    englist_text = extract_text_from_image(image_bytes, model)
-    vietnamese_text = polish_and_translate(englist_text)
-    return {
-        "message": "Image processed successfully",
-        "original_text": englist_text,
-        "translated_text": vietnamese_text
-    }
+    # Gọi hàm xử lý (giả định bạn có pipeline được định nghĩa sẵn)
+    output = pipeline(image_bytes, question, longitude, latitude)
 
-@app.post("/gps")
-async def receive_gps(request: Request):
-    print("📍 Nhận dữ liệu GPS")
-    data = await request.json()
-    print(f"📍 Nhận dữQ liệu GPS: {data}")
-    return {"message": "Đã nhận tọa độ!"}
+    return {"data": output}
+
+
 
 
 
