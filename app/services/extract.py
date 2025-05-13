@@ -1,13 +1,13 @@
 import io
-
 from PIL import Image
+from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer, pipeline
+import torch
 
-from processing.image_processing import process_image
-from settings import DEVICE
+def extract_text_from_image(image_bytes, device="cpu"):
+    # Load image
+    image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
 
-
-def extract_text_from_image(image_bytes, model):
-    image = Image.open(io.BytesIO(image_bytes))
-    image = process_image(image).to(DEVICE)
-    text = model.generate_caption(image)
-    return text
+    pipe = pipeline("image-to-text", model="nlpconnect/vit-gpt2-image-captioning")
+    caption = pipe(image)
+    print(caption)
+    return caption[0]["generated_text"]

@@ -23,7 +23,7 @@ def pipeline(image, question, longitude, latitude):
             response = polished_text
 
         case Intent.TIME_WEATHER:
-            response = answer_question_about_time_and_weather(longitude, latitude)
+            response = answer_question_about_time_and_weather(question, longitude, latitude)
         case Intent.INFORMATION_QUESTION:
             response = answer_question_basic(question)
         case Intent.OTHER_ACTION_REQUEST:

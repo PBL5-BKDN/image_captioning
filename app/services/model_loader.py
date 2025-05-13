@@ -1,13 +1,11 @@
 import logging
 import os
 
-
 from model.ImageCaptioningModelV2 import ImageCaptionModelV2
 from settings import BASE_DIR, DEVICE
 from train.helper import load_checkpoint
 
 _model_instance = None
-
 
 
 def get_model():
