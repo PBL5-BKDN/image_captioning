@@ -4,51 +4,51 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from dataset.flickr30k.Flickr30kDataset import Flickr30kDataset
-from dataset.stanford_Image_Paragraph_Captioning_dataset.build_vocab import Vocab
+from dataset.stanford_Image_Paragraph_Captioning_dataset.build_vocab import  Vocab
+from model.ImageCaptioningModelV2 import ImageCaptionModelV2
+from model.VIT import VIT
 
-from model.ImageCaptioningModel_transformer import ImageCaptionModel
-from settings import DEVICE , BASE_DIR
-from train.helper import train, collate_fn
-
-
+from settings import BASE_DIR, DEVICE
+from train.helper import train, collate_fn, load_checkpoint
+print("Using device:", DEVICE)
 WORD_COUNT_THRESHOLD = 5
 EMBED_DIM = 200
 NUM_HEADS = 4
-UNITS = 256
+UNITS = 512
 BATCH_SIZE = 256
 
-learning_rate = 0.05
+learning_rate = 0.0001
 epochs = 50
 patience = 5
 min_delta = 0.001
 MAX_LEN = 30
-
 vocab_path = os.path.join(BASE_DIR, "dataset/flickr30k/train.csv")
+
 vocab = Vocab(vocab_path, WORD_COUNT_THRESHOLD=WORD_COUNT_THRESHOLD, column="caption")
+print("DEVICE: ", DEVICE)
 
 config = {
     "vocab": vocab,
-    "embed_dim": EMBED_DIM,
+    "embed_dim":EMBED_DIM,
     "num_heads": NUM_HEADS,
-    "vocab_size": vocab.vocab_size,
+    "num_blocks": 3,
     "max_len": vocab.MAX_LENGTH,
+    "mlp_hidden_size":UNITS,
 }
+
 # Khởi tạo mô hình
-model = ImageCaptionModel(
-    **config,
+model = VIT(
+  **config,
 ).to(DEVICE)
 
-# train_path = os.path.join(BASE_DIR, "dataset/stanford_Image_Paragraph_Captioning_dataset", "train.csv")
-# val_path = os.path.join(BASE_DIR, "dataset/stanford_Image_Paragraph_Captioning_dataset", "val.csv")
-
-# train_dataset = StandfordParagraphDataset(train_path)
-# val_dataset = StandfordParagraphDataset(val_path)
 
 train_path = os.path.join(BASE_DIR, "dataset/flickr30k/train.csv")
 val_path = os.path.join(BASE_DIR, "dataset/flickr30k/val.csv")
 
+
 train_dataset = Flickr30kDataset(train_path, word2idx=vocab.w2i, max_length= MAX_LEN)
 val_dataset = Flickr30kDataset(val_path,word2idx=vocab.w2i, max_length = MAX_LEN)
+
 
 
 val_dataloader = DataLoader(
@@ -63,13 +63,11 @@ train_dataloader = DataLoader(
     shuffle=True,
     collate_fn=collate_fn)
 
-
-criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.1)
+save_path = os.path.join(BASE_DIR, "train", "model", "best_model_vit.pth" )
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+# model, optimizer, start_epoch = load_checkpoint(ImageCaptionModelV2,save_path, learning_rate=learning_rate)
+criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.1)
 
-
-
-save_path = os.path.join(BASE_DIR, "train", "model",   "best_model_transformer_v1.pth" )
 if __name__ == "__main__":
     train(
         train_dataloader,

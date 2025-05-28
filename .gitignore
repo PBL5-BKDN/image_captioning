@@ -62,3 +62,6 @@ dataset/flickr30k/Images
 # Misc
 *.swp
 *.swo
+
+
+dataset/flickr30k/flickr30k-images

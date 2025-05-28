@@ -40,8 +40,10 @@ def train(train_dataloader, val_dataloader, model, epochs, optimizer,criterion ,
         for images, inputs, targets in train_loader:
             images, inputs, targets = images.to(DEVICE), inputs.to(DEVICE), targets.to(DEVICE)
 
+
             optimizer.zero_grad()
             output = model(images, inputs)  # (B, MAX_LEN - 1, VOCAB_SIZE)
+
 
             loss = criterion(output.reshape(-1, vocab.vocab_size), targets.reshape(-1))
 
@@ -130,13 +132,26 @@ def set_seed(seed=42):
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
-def load_checkpoint(model_class, checkpoint_path, optimizer=None):
-    checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
+
+def load_checkpoint(model_class, checkpoint_path, learning_rate):
+    checkpoint = torch.load(checkpoint_path, map_location=DEVICE, weights_only=False)
+
+    # Khởi tạo model
     model = model_class(**checkpoint['config'])
+    model.to(DEVICE)
+
+    # Tải trọng số
     model.load_state_dict(checkpoint['model_state_dict'])
-    if optimizer :
+
+    # Khởi tạo optimizer với tham số model
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+    # Tải trạng thái optimizer nếu có
+    if 'optimizer_state_dict' in checkpoint:
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+
     start_epoch = checkpoint.get('epoch', 0) + 1
+
     return model, optimizer, start_epoch
 
 set_seed(42)

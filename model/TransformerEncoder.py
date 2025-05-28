@@ -8,7 +8,7 @@ class TransformerEncoder(nn.Module):
             nn.Linear(embed_dim, embed_dim),
             nn.ReLU()
         )
-        self.attention = nn.MultiheadAttention(embed_dim, num_heads, batch_first=True)
+        self.attention = nn.MultiheadAttention(embed_dim, num_heads, batch_first=True, dropout=0.1)
         self.layer_norm_2 = nn.LayerNorm(embed_dim)
 
     def forward(self, x):

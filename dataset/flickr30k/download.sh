@@ -1,8 +1,15 @@
-wget "https://github.com/awsaf49/flickr-dataset/releases/download/v1.0/flickr30k_part00"
-wget "https://github.com/awsaf49/flickr-dataset/releases/download/v1.0/flickr30k_part01"
-wget "https://github.com/awsaf49/flickr-dataset/releases/download/v1.0/flickr30k_part02"
-cat flickr30k_part00 flickr30k_part01 flickr30k_part02 > flickr30k.zip
-rm flickr30k_part00 flickr30k_part01 flickr30k_part02
-unzip -q flickr30k.zip -d ./flickr30k
-rm flickr30k.zip
+#!/bin/bash
+
+# Tải file ảnh
+curl -L -o flickr30k-images.zip "https://huggingface.co/datasets/nlphuji/flickr30k/resolve/main/flickr30k-images.zip"
+
+# Tải annotation CSV
+curl -L -o flickr_annotations_30k.csv "https://huggingface.co/datasets/nlphuji/flickr30k/resolve/main/flickr_annotations_30k.csv"
+
+# Giải nén
+unzip -q flickr30k-images.zip -d ./
+
+# Xóa file zip
+rm flickr30k-images.zip
+
 echo "Downloaded Flickr30k dataset successfully."

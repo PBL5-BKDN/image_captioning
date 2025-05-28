@@ -1,10 +1,10 @@
-from app.services.extract import extract_text_from_image
-from app.services.llm_translate import polish_and_translate, analyze_intent, answer_question_about_time_and_weather, \
-    answer_question_basic, Intent, answer_question_out_of_ability
-from app.services.model_loader import get_model
+import requests
+
+from app.services.llm import polish_and_translate, analyze_intent, answer_question_about_time_and_weather, \
+    answer_question_basic, Intent, answer_question_out_of_ability, answer_question_street_status
 
 
-def pipeline(image, question, longitude, latitude):
+async def pipeline(image, question):
     """
     Pipeline function to process the image and question.
     """
@@ -16,18 +16,23 @@ def pipeline(image, question, longitude, latitude):
     match intent:
         case Intent.IMAGE_DESCRIPTION:
             # Extract text from image
-            model = get_model()
-            extracted_text = extract_text_from_image(image, model)
+
+            # Đọc nội dung bytes từ UploadFile
+            image_bytes = await image.read()
+            res = requests.post("http://localhost:4000/upload-image/", files={"file": (image.filename, image_bytes, image.content_type)}).json()
             # Polish and translate the extracted text
-            polished_text = polish_and_translate(extracted_text)
+            print(res)
+            polished_text = polish_and_translate(res["data"])
             response = polished_text
 
         case Intent.TIME_WEATHER:
-            response = answer_question_about_time_and_weather(question, longitude, latitude)
+            response = answer_question_about_time_and_weather(question)
         case Intent.INFORMATION_QUESTION:
             response = answer_question_basic(question)
         case Intent.OTHER_ACTION_REQUEST:
             response = answer_question_out_of_ability(question)
+        case Intent.STREET_STATUS:
+            response = answer_question_street_status(question)
         case _:
             response = answer_question_out_of_ability(question)
 

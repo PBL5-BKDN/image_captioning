@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import torch
 
-from dataset.stanford_Image_Paragraph_Captioning_dataset.build_vocab import vocab
+
 from settings import BASE_DIR
 
 
@@ -32,5 +32,3 @@ def load_glove_embeddings(glove_path, word2idx, embedding_dim=100):
     return torch.tensor(embedding_matrix, dtype=torch.float32)
 
 
-glove_path = os.path.join(BASE_DIR, "model", "glove.6B", "glove.6B.300d.txt")
-glove_tensor = load_glove_embeddings(glove_path, vocab.w2i, embedding_dim=300)

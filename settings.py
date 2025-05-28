@@ -9,6 +9,8 @@ stanford_image_paragraph_captioning_dataset_folder = os.path.join(BASE_DIR, 'dat
 
 LLM_API_KEY = os.environ.get("LLM_API_KEY")
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+SERP_API_KEY = os.getenv("SERP_API_KEY")
+TOMTOM_API_KEY = os.getenv("TOMTOM_API_KEY")
 
 WORD_COUNT_THRESHOLD = 5
 EMBED_DIM = 200

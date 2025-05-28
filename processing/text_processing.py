@@ -7,5 +7,5 @@ nltk.download('punkt_tab', quiet=True)
 def caption_preprocessing(text, remove_digits=True):
     text = re.sub(r'[^\w\s]', '', text)  # Giữ chữ cái và số
     text = word_tokenize(text.lower())
-    text = '<START> ' + ' '.join(text) + ' <END>'
+    text = ' '.join(text)
     return text

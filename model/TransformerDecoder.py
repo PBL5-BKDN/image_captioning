@@ -5,7 +5,7 @@ import torch
 
 
 class TransformerDecoder(nn.Module):
-    def __init__(self,w2i, glove_tensor, units, embed_dim = 300, num_heads= 4, vocab_size=10000, max_len = 50):
+    def __init__(self, embed_dim = 300, num_heads= 4, vocab_size=10000):
         super(TransformerDecoder, self).__init__()
         self.vocab_size = vocab_size
 
@@ -17,14 +17,14 @@ class TransformerDecoder(nn.Module):
 
 
         self.ffn_layer_1 = nn.Sequential(
-            nn.Linear(embed_dim, units),
+            nn.Linear(embed_dim, 4 * embed_dim),
             nn.ReLU(),
         )
 
         self.dropout_1 = nn.Dropout(0.3)
 
         self.ffn_layer_2 = nn.Sequential(
-            nn.Linear(units,embed_dim),
+            nn.Linear(4 * embed_dim,embed_dim),
             nn.ReLU(),
         )
 
@@ -40,11 +40,12 @@ class TransformerDecoder(nn.Module):
 
 
 
-    def forward(self, embeddings, encoder_output, mask = None):
+    def forward(self, embeddings, encoder_output, decoder_mask = None, encoder_mask = None):
         """
-        :param input_ids: tensor of shape (B, MAX_SEQUENCE_LENGTH)
-        :param encoder_output:
-        :param mask:
+        :param embeddings: (B, T, E) - decoder input embeddings
+        :param encoder_output: (B, S, E) - encoded image patches
+        :param decoder_mask: (B, T) - mask cho decoder (1: hợp lệ, 0: pad)
+        :param encoder_mask: (B, S) - mask cho encoder (1: hợp lệ, 0: pad)
         :return:
         """
         seq_len = embeddings.size(1)
@@ -54,23 +55,26 @@ class TransformerDecoder(nn.Module):
         causal_mask = causal_mask.masked_fill(causal_mask == 0, float('-inf')).masked_fill(causal_mask == 1, float(0.0))
 
 
-        key_padding_mask = (~mask).float()
+        decoder_key_padding_mask = (~decoder_mask).float() if decoder_mask is not None else None
+
+
 
         attn_output_1, attn_weights = self.attention_1(
             embeddings,
             embeddings,
             embeddings,
             attn_mask=causal_mask,
-            key_padding_mask=key_padding_mask
+            key_padding_mask=decoder_key_padding_mask
         )
 
         out_1 = self.layer_norm_1(embeddings + attn_output_1)
 
+        encoder_key_padding_mask = ~encoder_mask if encoder_mask is not None else None
         attn_output_2, _ = self.attention_2(
             query=out_1,
             value=encoder_output,
             key=encoder_output,
-
+            key_padding_mask=encoder_key_padding_mask
         )
 
         out_2 = self.layer_norm_2(out_1 + attn_output_2)
