@@ -128,7 +128,8 @@ async def detect_objects(image: UploadFile = File(...)):
 
     if closest_object is None:
         return JSONResponse(content={"error": "No object detected."}, status_code=400)
-
+    #luu anh 
+    cv2.imwrite('dectect_image.jpg', img)
     _, img_encoded = cv2.imencode('.jpg', img)
     text = f"Có {closest_object['label']} {closest_object['direction']}"
     return {
