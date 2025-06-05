@@ -1,6 +1,6 @@
 import math
 import os.path
-
+from datetime import datetime
 import cv2
 import numpy as np
 import uvicorn
@@ -129,7 +129,9 @@ async def detect_objects(image: UploadFile = File(...)):
     if closest_object is None:
         return JSONResponse(content={"error": "No object detected."}, status_code=400)
     #luu anh 
-    cv2.imwrite('dectect_image.jpg', img)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f'detect_image_{timestamp}.jpg'
+    cv2.imwrite(filename, img)
     _, img_encoded = cv2.imencode('.jpg', img)
     text = f"Có {closest_object['label']} {closest_object['direction']}"
     return {
