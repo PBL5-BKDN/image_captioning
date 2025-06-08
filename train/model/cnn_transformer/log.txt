@@ -1,0 +1,340 @@
+Epoch 1/100 [Training]: 100%|██████████| 284/284 [20:22<00:00,  4.31s/it]
+Epoch 1/100 [Validation]: 100%|██████████| 10/10 [00:51<00:00,  5.18s/it]
+
+Epoch 1/100 | Train Loss: 6.8568 | Val Loss: 5.6381
+Epoch 2/100 [Training]: 100%|██████████| 284/284 [13:30<00:00,  2.85s/it]
+Epoch 2/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.34s/it]
+
+Epoch 2/100 | Train Loss: 5.6067 | Val Loss: 5.1568
+Epoch 3/100 [Training]: 100%|██████████| 284/284 [14:39<00:00,  3.10s/it]
+Epoch 3/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.39s/it]
+
+Epoch 3/100 | Train Loss: 5.1910 | Val Loss: 4.7898
+Epoch 4/100 [Training]: 100%|██████████| 284/284 [14:42<00:00,  3.11s/it]
+Epoch 4/100 [Validation]: 100%|██████████| 10/10 [00:44<00:00,  4.47s/it]
+
+Epoch 4/100 | Train Loss: 4.9485 | Val Loss: 4.6412
+Epoch 5/100 [Training]: 100%|██████████| 284/284 [12:48<00:00,  2.71s/it]
+Epoch 5/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.48s/it]
+
+Epoch 5/100 | Train Loss: 4.7906 | Val Loss: 4.4879
+Epoch 6/100 [Training]: 100%|██████████| 284/284 [12:18<00:00,  2.60s/it]
+Epoch 6/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.44s/it]
+
+Epoch 6/100 | Train Loss: 4.6617 | Val Loss: 4.3905
+Epoch 7/100 [Training]: 100%|██████████| 284/284 [12:16<00:00,  2.59s/it]
+Epoch 7/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.50s/it]
+
+Epoch 7/100 | Train Loss: 4.5689 | Val Loss: 4.3148
+Epoch 8/100 [Training]: 100%|██████████| 284/284 [12:18<00:00,  2.60s/it]
+Epoch 8/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.45s/it]
+
+Epoch 8/100 | Train Loss: 4.4874 | Val Loss: 4.2361
+Epoch 9/100 [Training]: 100%|██████████| 284/284 [12:16<00:00,  2.59s/it]
+Epoch 9/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.45s/it]
+
+Epoch 9/100 | Train Loss: 4.4197 | Val Loss: 4.1918
+Epoch 10/100 [Training]: 100%|██████████| 284/284 [12:17<00:00,  2.60s/it]
+Epoch 10/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.45s/it]
+
+Epoch 10/100 | Train Loss: 4.3630 | Val Loss: 4.1347
+Epoch 11/100 [Training]: 100%|██████████| 284/284 [12:16<00:00,  2.59s/it]
+Epoch 11/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.48s/it]
+
+Epoch 11/100 | Train Loss: 4.3100 | Val Loss: 4.0960
+Epoch 12/100 [Training]: 100%|██████████| 284/284 [12:19<00:00,  2.60s/it]
+Epoch 12/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.48s/it]
+
+Epoch 12/100 | Train Loss: 4.2657 | Val Loss: 4.0586
+Epoch 13/100 [Training]: 100%|██████████| 284/284 [12:18<00:00,  2.60s/it]
+Epoch 13/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.47s/it]
+
+Epoch 13/100 | Train Loss: 4.2239 | Val Loss: 4.0217
+Epoch 14/100 [Training]: 100%|██████████| 284/284 [12:18<00:00,  2.60s/it]
+Epoch 14/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.45s/it]
+
+Epoch 14/100 | Train Loss: 4.1875 | Val Loss: 3.9939
+Epoch 15/100 [Training]: 100%|██████████| 284/284 [12:13<00:00,  2.58s/it]
+Epoch 15/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.44s/it]
+
+Epoch 15/100 | Train Loss: 4.1548 | Val Loss: 3.9643
+Epoch 16/100 [Training]: 100%|██████████| 284/284 [12:28<00:00,  2.64s/it]
+Epoch 16/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.58s/it]
+
+Epoch 16/100 | Train Loss: 4.1230 | Val Loss: 3.9432
+Epoch 17/100 [Training]: 100%|██████████| 284/284 [12:44<00:00,  2.69s/it]
+Epoch 17/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 17/100 | Train Loss: 4.0968 | Val Loss: 3.9203
+Epoch 18/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 18/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 18/100 | Train Loss: 4.0694 | Val Loss: 3.9015
+Epoch 19/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 19/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 19/100 | Train Loss: 4.0468 | Val Loss: 3.8876
+Epoch 20/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 20/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 20/100 | Train Loss: 4.0219 | Val Loss: 3.8651
+Epoch 21/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 21/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 21/100 | Train Loss: 4.0005 | Val Loss: 3.8578
+Epoch 22/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 22/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 22/100 | Train Loss: 3.9830 | Val Loss: 3.8411
+Epoch 23/100 [Training]: 100%|██████████| 284/284 [12:40<00:00,  2.68s/it]
+Epoch 23/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 23/100 | Train Loss: 3.9606 | Val Loss: 3.8265
+Epoch 24/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 24/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 24/100 | Train Loss: 3.9455 | Val Loss: 3.8163
+Epoch 25/100 [Training]: 100%|██████████| 284/284 [12:40<00:00,  2.68s/it]
+Epoch 25/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 25/100 | Train Loss: 3.9270 | Val Loss: 3.8017
+Epoch 26/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 26/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 26/100 | Train Loss: 3.9109 | Val Loss: 3.7962
+Epoch 27/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.67s/it]
+Epoch 27/100 [Validation]: 100%|██████████| 10/10 [00:36<00:00,  3.61s/it]
+
+Epoch 27/100 | Train Loss: 3.8970 | Val Loss: 3.7830
+Epoch 28/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.68s/it]
+Epoch 28/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 28/100 | Train Loss: 3.8799 | Val Loss: 3.7743
+Epoch 29/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.67s/it]
+Epoch 29/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 29/100 | Train Loss: 3.8699 | Val Loss: 3.7713
+Epoch 30/100 [Training]: 100%|██████████| 284/284 [12:42<00:00,  2.69s/it]
+Epoch 30/100 [Validation]: 100%|██████████| 10/10 [00:36<00:00,  3.61s/it]
+
+Epoch 30/100 | Train Loss: 3.8528 | Val Loss: 3.7601
+Epoch 31/100 [Training]: 100%|██████████| 284/284 [12:49<00:00,  2.71s/it]
+Epoch 31/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.58s/it]
+
+Epoch 31/100 | Train Loss: 3.8420 | Val Loss: 3.7565
+Epoch 32/100 [Training]: 100%|██████████| 284/284 [12:42<00:00,  2.69s/it]
+Epoch 32/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 32/100 | Train Loss: 3.8290 | Val Loss: 3.7479
+Epoch 33/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.67s/it]
+Epoch 33/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.56s/it]
+
+Epoch 33/100 | Train Loss: 3.8171 | Val Loss: 3.7408
+Epoch 34/100 [Training]: 100%|██████████| 284/284 [12:40<00:00,  2.68s/it]
+Epoch 34/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 34/100 | Train Loss: 3.8068 | Val Loss: 3.7372
+Epoch 35/100 [Training]: 100%|██████████| 284/284 [12:57<00:00,  2.74s/it]
+Epoch 35/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.57s/it]
+
+Epoch 35/100 | Train Loss: 3.7929 | Val Loss: 3.7318
+Epoch 36/100 [Training]: 100%|██████████| 284/284 [12:40<00:00,  2.68s/it]
+Epoch 36/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 36/100 | Train Loss: 3.7855 | Val Loss: 3.7265
+Epoch 37/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 37/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 37/100 | Train Loss: 3.7742 | Val Loss: 3.7206
+Epoch 38/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.67s/it]
+Epoch 38/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 38/100 | Train Loss: 3.7652 | Val Loss: 3.7183
+Epoch 39/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 39/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 39/100 | Train Loss: 3.7566 | Val Loss: 3.7130
+Epoch 40/100 [Training]: 100%|██████████| 284/284 [12:36<00:00,  2.66s/it]
+Epoch 40/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 40/100 | Train Loss: 3.7458 | Val Loss: 3.7094
+Epoch 41/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 41/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 41/100 | Train Loss: 3.7392 | Val Loss: 3.7056
+Epoch 42/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 42/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 42/100 | Train Loss: 3.7279 | Val Loss: 3.7030
+Epoch 43/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 43/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 43/100 | Train Loss: 3.7228 | Val Loss: 3.6993
+Epoch 44/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 44/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 44/100 | Train Loss: 3.7133 | Val Loss: 3.6961
+Epoch 45/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 45/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+Epoch 46/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 45/100 | Train Loss: 3.7042 | Val Loss: 3.6976
+Epoch 46/100 [Training]: 100%|██████████| 284/284 [12:36<00:00,  2.66s/it]
+Epoch 46/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 46/100 | Train Loss: 3.6996 | Val Loss: 3.6926
+Epoch 47/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 47/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+Epoch 48/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 47/100 | Train Loss: 3.6901 | Val Loss: 3.6919
+Epoch 48/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 48/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 48/100 | Train Loss: 3.6862 | Val Loss: 3.6851
+Epoch 49/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 49/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 49/100 | Train Loss: 3.6764 | Val Loss: 3.6859
+Epoch 50/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 50/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.56s/it]
+
+Epoch 50/100 | Train Loss: 3.6713 | Val Loss: 3.6840
+Epoch 51/100 [Training]: 100%|██████████| 284/284 [12:42<00:00,  2.68s/it]
+Epoch 51/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.55s/it]
+
+Epoch 51/100 | Train Loss: 3.6637 | Val Loss: 3.6806
+Epoch 52/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.68s/it]
+Epoch 52/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 52/100 | Train Loss: 3.6561 | Val Loss: 3.6820
+Epoch 53/100 [Training]: 100%|██████████| 284/284 [12:36<00:00,  2.66s/it]
+Epoch 53/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 53/100 | Train Loss: 3.6526 | Val Loss: 3.6799
+Epoch 54/100 [Training]: 100%|██████████| 284/284 [12:36<00:00,  2.66s/it]
+Epoch 54/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 54/100 | Train Loss: 3.6441 | Val Loss: 3.6752
+Epoch 55/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 55/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.52s/it]
+
+Epoch 55/100 | Train Loss: 3.6412 | Val Loss: 3.6711
+Epoch 56/100 [Training]: 100%|██████████| 284/284 [12:36<00:00,  2.66s/it]
+Epoch 56/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+Epoch 57/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 56/100 | Train Loss: 3.6329 | Val Loss: 3.6731
+Epoch 57/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 57/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 57/100 | Train Loss: 3.6280 | Val Loss: 3.6681
+Epoch 58/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 58/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 58/100 | Train Loss: 3.6243 | Val Loss: 3.6665
+Epoch 59/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 59/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+Epoch 60/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 59/100 | Train Loss: 3.6161 | Val Loss: 3.6667
+Epoch 60/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 60/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 60/100 | Train Loss: 3.6147 | Val Loss: 3.6647
+Epoch 61/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 61/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 61/100 | Train Loss: 3.6054 | Val Loss: 3.6627
+Epoch 62/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 62/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 62/100 | Train Loss: 3.6028 | Val Loss: 3.6643
+Epoch 63/100 [Training]: 100%|██████████| 284/284 [12:37<00:00,  2.67s/it]
+Epoch 63/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+
+Epoch 63/100 | Train Loss: 3.5969 | Val Loss: 3.6585
+Epoch 64/100 [Training]: 100%|██████████| 284/284 [12:38<00:00,  2.67s/it]
+Epoch 64/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.55s/it]
+
+Epoch 64/100 | Train Loss: 3.5923 | Val Loss: 3.6637
+Epoch 65/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.67s/it]
+Epoch 65/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 65/100 | Train Loss: 3.5891 | Val Loss: 3.6558
+Epoch 66/100 [Training]: 100%|██████████| 284/284 [12:39<00:00,  2.68s/it]
+Epoch 66/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.54s/it]
+Epoch 67/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 66/100 | Train Loss: 3.5825 | Val Loss: 3.6572
+Epoch 67/100 [Training]: 100%|██████████| 284/284 [12:43<00:00,  2.69s/it]
+Epoch 67/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.56s/it]
+Epoch 68/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 67/100 | Train Loss: 3.5807 | Val Loss: 3.6568
+Epoch 68/100 [Training]: 100%|██████████| 284/284 [12:44<00:00,  2.69s/it]
+Epoch 68/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.55s/it]
+
+Epoch 68/100 | Train Loss: 3.5727 | Val Loss: 3.6534
+Epoch 69/100 [Training]: 100%|██████████| 284/284 [12:40<00:00,  2.68s/it]
+Epoch 69/100 [Validation]: 100%|██████████| 10/10 [00:35<00:00,  3.53s/it]
+
+Epoch 69/100 | Train Loss: 3.5704 | Val Loss: 3.6572
+Epoch 70/100 [Training]: 100%|██████████| 284/284 [18:27<00:00,  3.90s/it]
+Epoch 70/100 [Validation]: 100%|██████████| 10/10 [00:47<00:00,  4.78s/it]
+
+Epoch 70/100 | Train Loss: 3.5672 | Val Loss: 3.6519
+Epoch 71/100 [Training]: 100%|██████████| 284/284 [13:48<00:00,  2.92s/it]
+Epoch 71/100 [Validation]: 100%|██████████| 10/10 [00:37<00:00,  3.77s/it]
+Epoch 72/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 71/100 | Train Loss: 3.5614 | Val Loss: 3.6532
+Epoch 72/100 [Training]: 100%|██████████| 284/284 [13:01<00:00,  2.75s/it]
+Epoch 72/100 [Validation]: 100%|██████████| 10/10 [00:41<00:00,  4.16s/it]
+
+Epoch 72/100 | Train Loss: 3.5612 | Val Loss: 3.6488
+Epoch 73/100 [Training]: 100%|██████████| 284/284 [14:56<00:00,  3.16s/it]
+Epoch 73/100 [Validation]: 100%|██████████| 10/10 [00:47<00:00,  4.75s/it]
+Epoch 74/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 73/100 | Train Loss: 3.5511 | Val Loss: 3.6513
+Epoch 74/100 [Training]: 100%|██████████| 284/284 [14:46<00:00,  3.12s/it]
+Epoch 74/100 [Validation]: 100%|██████████| 10/10 [00:47<00:00,  4.79s/it]
+
+Epoch 74/100 | Train Loss: 3.5520 | Val Loss: 3.6533
+Epoch 75/100 [Training]: 100%|██████████| 284/284 [14:28<00:00,  3.06s/it]
+Epoch 75/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.31s/it]
+
+Epoch 75/100 | Train Loss: 3.5460 | Val Loss: 3.6470
+Epoch 76/100 [Training]: 100%|██████████| 284/284 [14:33<00:00,  3.08s/it]
+Epoch 76/100 [Validation]: 100%|██████████| 10/10 [00:51<00:00,  5.15s/it]
+
+Epoch 76/100 | Train Loss: 3.5426 | Val Loss: 3.6544
+Epoch 77/100 [Training]: 100%|██████████| 284/284 [15:02<00:00,  3.18s/it]
+Epoch 77/100 [Validation]: 100%|██████████| 10/10 [00:50<00:00,  5.01s/it]
+
+Epoch 77/100 | Train Loss: 3.5397 | Val Loss: 3.6455
+Epoch 78/100 [Training]: 100%|██████████| 284/284 [13:57<00:00,  2.95s/it]
+Epoch 78/100 [Validation]: 100%|██████████| 10/10 [00:34<00:00,  3.43s/it]
+
+Epoch 78/100 | Train Loss: 3.5330 | Val Loss: 3.6440
+Epoch 79/100 [Training]: 100%|██████████| 284/284 [15:09<00:00,  3.20s/it]
+Epoch 79/100 [Validation]: 100%|██████████| 10/10 [00:50<00:00,  5.09s/it]
+
+Epoch 79/100 | Train Loss: 3.5342 | Val Loss: 3.6428
+Epoch 80/100 [Training]: 100%|██████████| 284/284 [14:10<00:00,  2.99s/it]
+Epoch 80/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.35s/it]
+Epoch 81/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 80/100 | Train Loss: 3.5264 | Val Loss: 3.6433
+Epoch 81/100 [Training]: 100%|██████████| 284/284 [13:59<00:00,  2.95s/it]
+Epoch 81/100 [Validation]: 100%|██████████| 10/10 [00:42<00:00,  4.29s/it]
+Epoch 82/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 81/100 | Train Loss: 3.5258 | Val Loss: 3.6429
+Epoch 82/100 [Training]: 100%|██████████| 284/284 [13:55<00:00,  2.94s/it]
+Epoch 82/100 [Validation]: 100%|██████████| 10/10 [00:42<00:00,  4.30s/it]
+
+Epoch 82/100 | Train Loss: 3.5217 | Val Loss: 3.6437
+Epoch 83/100 [Training]: 100%|██████████| 284/284 [13:57<00:00,  2.95s/it]
+Epoch 83/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.31s/it]
+
+Epoch 83/100 | Train Loss: 3.5174 | Val Loss: 3.6408
+Epoch 84/100 [Training]: 100%|██████████| 284/284 [13:58<00:00,  2.95s/it]
+Epoch 84/100 [Validation]: 100%|██████████| 10/10 [00:43<00:00,  4.38s/it]
+
+Epoch 84/100 | Train Loss: 3.5170 | Val Loss: 3.6408
+Epoch 85/100 [Training]: 100%|██████████| 284/284 [14:19<00:00,  3.03s/it]
+Epoch 85/100 [Validation]: 100%|██████████| 10/10 [00:56<00:00,  5.63s/it]
+Epoch 86/100 [Training]:   0%|          | 0/284 [00:00<?, ?it/s]
+Epoch 85/100 | Train Loss: 3.5104 | Val Loss: 3.6429

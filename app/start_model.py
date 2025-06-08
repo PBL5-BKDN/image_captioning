@@ -9,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from ultralytics import YOLO
 
-
+from app.segment import predict_image
+from app.services.extract import extract_text_from_image
 from settings import BASE_DIR
 
 app = FastAPI(title="Simple FastAPI Server")
@@ -24,25 +25,37 @@ async def root():
     return {"message": "Welcome to the FastAPI Server!"}
 
 
-# Upload image endpoint
-# @app.post("/upload-image/")
-# async def upload_image(
-#         file: UploadFile = File(...),
-# ):
-#     # Check if file is an image
-#     if not file.content_type.startswith("image/"):
-#         return {
-#             "error": "File is not an image."
-#         }
-#
-#     # Đọc nội dung bytes từ UploadFile
-#     image_bytes = await file.read()
-#
-#     text = extract_text_from_image(image_bytes)
-#
-#
-#     return {"data": text}
 
+@app.post("/upload-image/")
+async def upload_image(
+        file: UploadFile = File(...),
+):
+    # Check if file is an image
+    if not file.content_type.startswith("image/"):
+        return {
+            "error": "File is not an image."
+        }
+
+    # Đọc nội dung bytes từ UploadFile
+    image_bytes = await file.read()
+
+    text = extract_text_from_image(image_bytes)
+
+
+    return {"data": text}
+
+@app.post("/segment/")
+async def segment(image: UploadFile = File(...)):
+    if not image.content_type.startswith("image/"):
+        return JSONResponse(content={"error": "File is not an image."}, status_code=400)
+    # Decode image
+    img_bytes = await image.read()
+    img_np = np.frombuffer(img_bytes, np.uint8)
+    img = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
+
+    return {
+        "data": predict_image(img)
+    }
 
 @app.post("/detect/")
 async def detect_objects(image: UploadFile = File(...)):
@@ -96,6 +109,9 @@ async def detect_objects(image: UploadFile = File(...)):
         "Other Vehicle": "Phương tiện khác",
         "Truck": "Xe tải"
     }
+    class_translations_en = {k: k for k, v in class_translations.items() if v is not None}
+
+    print(class_translations)
 
     closest_object = None
     min_distance = float('inf')
@@ -112,7 +128,7 @@ async def detect_objects(image: UploadFile = File(...)):
         obj_center = ((x1 + x2) // 2, (y1 + y2) // 2)
 
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(img, f"{label_vi} ({conf:.2f})", (x1, y1 - 10),
+        cv2.putText(img, f"{label_en} ({conf:.2f})", (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         distance = math.hypot(obj_center[0] - camera_position[0], obj_center[1] - camera_position[1])
@@ -125,14 +141,15 @@ async def detect_objects(image: UploadFile = File(...)):
                 "distance": round(distance, 2),
                 "direction": get_object_direction(obj_center)
             }
-
-    if closest_object is None:
-        return JSONResponse(content={"error": "No object detected."}, status_code=400)
-    #luu anh 
+        # luu anh
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f'detect_image_{timestamp}.jpg'
+    filename = os.path.join(BASE_DIR, "uploads", f'detect_image_{timestamp}.jpg')
     cv2.imwrite(filename, img)
     _, img_encoded = cv2.imencode('.jpg', img)
+
+    if closest_object is None:
+        return JSONResponse(content={"data": "No object detected."}, status_code=200)
+
     text = f"Có {closest_object['label']} {closest_object['direction']}"
     return {
         "data": text,

@@ -4,21 +4,20 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from dataset.flickr30k.Flickr30kDataset import Flickr30kDataset
-from dataset.stanford_Image_Paragraph_Captioning_dataset.build_vocab import  Vocab
-from model.ImageCaptioningModelV2 import ImageCaptionModelV2
+from dataset.stanford_Image_Paragraph_Captioning_dataset.build_vocab import Vocab
 from model.VIT import VIT
 
 from settings import BASE_DIR, DEVICE
-from train.helper import train, collate_fn, load_checkpoint
+from train.helper import train, collate_fn
 print("Using device:", DEVICE)
 WORD_COUNT_THRESHOLD = 5
 EMBED_DIM = 200
 NUM_HEADS = 4
 UNITS = 512
-BATCH_SIZE = 256
+BATCH_SIZE = 512
 
 learning_rate = 0.0001
-epochs = 50
+epochs = 100
 patience = 5
 min_delta = 0.001
 MAX_LEN = 30
@@ -49,7 +48,10 @@ val_path = os.path.join(BASE_DIR, "dataset/flickr30k/val.csv")
 train_dataset = Flickr30kDataset(train_path, word2idx=vocab.w2i, max_length= MAX_LEN)
 val_dataset = Flickr30kDataset(val_path,word2idx=vocab.w2i, max_length = MAX_LEN)
 
-
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Tổng số tham số: {total_params:,}")
+trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"Số tham số có thể huấn luyện: {trainable_params:,}")
 
 val_dataloader = DataLoader(
     val_dataset,
@@ -63,10 +65,10 @@ train_dataloader = DataLoader(
     shuffle=True,
     collate_fn=collate_fn)
 
-save_path = os.path.join(BASE_DIR, "train", "model", "best_model_vit.pth" )
+
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-# model, optimizer, start_epoch = load_checkpoint(ImageCaptionModelV2,save_path, learning_rate=learning_rate)
-criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.1)
+
+criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.05)
 
 if __name__ == "__main__":
     train(
@@ -78,4 +80,6 @@ if __name__ == "__main__":
         criterion=criterion,
         vocab=vocab,
         config=config,
-        save_path=save_path)
+        model_name="vit")
+
+

@@ -57,7 +57,7 @@ def polish_and_translate(sentence_en):
     
     """
     )
-    return call_openrouter(user_prompt, sys_prompt) + " " + sentence_en
+    return call_openrouter(user_prompt, sys_prompt)
 
 
 def answer_question_basic(question_vi):

@@ -14,11 +14,11 @@ from train.helper import train, collate_fn
 WORD_COUNT_THRESHOLD = 5
 EMBED_DIM = 200
 NUM_HEADS = 4
-UNITS = 256
-BATCH_SIZE = 256
+UNITS = 512
+BATCH_SIZE = 512
 
-learning_rate = 0.05
-epochs = 50
+learning_rate = 0.0001
+epochs = 100
 patience = 5
 min_delta = 0.001
 MAX_LEN = 30
@@ -31,18 +31,17 @@ config = {
     "embed_dim": EMBED_DIM,
     "num_heads": NUM_HEADS,
     "vocab_size": vocab.vocab_size,
-    "max_len": vocab.MAX_LENGTH,
+    "max_len": MAX_LEN,
 }
 # Khởi tạo mô hình
 model = ImageCaptionModel(
     **config,
 ).to(DEVICE)
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Tổng số tham số: {total_params:,}")
+trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"Số tham số có thể huấn luyện: {trainable_params:,}")
 
-# train_path = os.path.join(BASE_DIR, "dataset/stanford_Image_Paragraph_Captioning_dataset", "train.csv")
-# val_path = os.path.join(BASE_DIR, "dataset/stanford_Image_Paragraph_Captioning_dataset", "val.csv")
-
-# train_dataset = StandfordParagraphDataset(train_path)
-# val_dataset = StandfordParagraphDataset(val_path)
 
 train_path = os.path.join(BASE_DIR, "dataset/flickr30k/train.csv")
 val_path = os.path.join(BASE_DIR, "dataset/flickr30k/val.csv")
@@ -64,12 +63,11 @@ train_dataloader = DataLoader(
     collate_fn=collate_fn)
 
 
-criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.1)
+criterion = nn.CrossEntropyLoss(ignore_index=vocab.w2i["<PAD>"], label_smoothing=0.05)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 
 
-save_path = os.path.join(BASE_DIR, "train", "model",   "best_model_transformer_v1.pth" )
 if __name__ == "__main__":
     train(
         train_dataloader,
@@ -80,4 +78,4 @@ if __name__ == "__main__":
         criterion=criterion,
         vocab=vocab,
         config=config,
-        save_path=save_path)
+        model_name="cnn_transformer",)

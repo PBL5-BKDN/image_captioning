@@ -20,7 +20,7 @@ class ImageCaptionModelV2(nn.Module):
             TransformerEncoder(embed_dim, num_heads),
             TransformerEncoder(embed_dim, num_heads),
         )
-        self.embedding = Embedding(vocab.w2i, embed_dim, vocab_size=vocab_size, max_len_seq=max_len)
+        self.embedding = Embedding(vocab.w2i, embed_dim)
 
         self.decoder = TransformerDecoder(embed_dim=embed_dim, num_heads=num_heads, vocab_size=vocab_size)
     def forward(self, images, inputs):
@@ -32,7 +32,6 @@ class ImageCaptionModelV2(nn.Module):
         features = self.patch_embedding(images) # (batch, num_patches, embed_dim)
         encoded_features = self.encoder(features) # (batch, num_patches, embed_dim)
         mask = (inputs != self.vocab.w2i["<PAD>"])
-        # encoder_mask = torch.ones((images.size(0), features.size(1)), dtype=torch.bool, device=images.device)
 
         embeddings = self.embedding(inputs)  # (batch, seq_len, embed_dim)
         outputs = self.decoder(embeddings, encoded_features, decoder_mask=mask) # (batch, seq_len, vocab_size)

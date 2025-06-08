@@ -15,8 +15,6 @@ from settings import BASE_DIR
 app = FastAPI(title="Simple FastAPI Server")
 
 
-
-
 @app.get("/")
 async def root():
     return {"message": "Welcome to the FastAPI Server!"}
@@ -56,6 +54,19 @@ async def detect_objects(image: UploadFile = File(...)):
         "data": text,
     }
 
+@app.post("/segment/")
+async def detect_objects(image: UploadFile = File(...)):
+    if not image.content_type.startswith("image/"):
+        return JSONResponse(content={"error": "File is not an image."}, status_code=400)
+    # Decode image
+    img_bytes = await image.read()
+
+    res = requests.post(
+        "http://localhost:4000/segment/",
+        files={"image": (image.filename, img_bytes, image.content_type)}
+    ).json()
+
+    return res
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=3000)
