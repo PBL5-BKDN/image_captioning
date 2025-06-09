@@ -2,7 +2,7 @@ import torch
 import segmentation_models_pytorch as smp
 import time
 
-def load_model(weights_path, num_classes=5):
+def load_model(weights_path, num_classes=4):
     model = smp.DeepLabV3Plus(
         encoder_name='mobilenet_v2',
         encoder_weights=None,
