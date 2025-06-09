@@ -14,12 +14,11 @@ from settings import BASE_DIR
 model_path = os.path.join(BASE_DIR, "app", "model", "deeplabv3plus_best.pth")
 model = load_model(model_path, num_classes=5)
 
-COLORS = [
-    (255, 255, 0),     # lớp 0
-    (0, 255, 0),       # lớp 1
-    (255, 0, 0),       # lớp 2
-    (0, 0, 255),       # lớp 3
-    (0, 0, 0),         # lớp 4 - nền
+COLORS = [    
+    (0, 255, 0),       # lớp 0
+    (255, 0, 0),       # lớp 1
+    (0, 0, 255),       # lớp 2
+    (0, 0, 0),         # lớp 3 - nền
 ]
 
 def decode_segmap(mask, num_classes):
@@ -29,7 +28,7 @@ def decode_segmap(mask, num_classes):
         color_mask[mask == cls] = COLORS[cls]
     return color_mask
 
-def show_prediction(model, dataset, device, idx=0, num_classes=5):
+def show_prediction(model, dataset, device, idx=0, num_classes=4):
     model.eval()
     with torch.no_grad():
         image, mask = dataset[idx]  # image: CxHxW, mask: HxW
@@ -82,10 +81,10 @@ def analyze_position(pred):
     unique_bottom = np.unique(bottom)
     
     # Nếu đang đứng trên vỉa hè hoặc vạch kẻ đường
-    if 3 in unique_bottom:
+    if 2 in unique_bottom:
         guidance = "Bạn đang đứng trên vỉa hè."
         return guidance
-    elif 1 in unique_bottom:
+    elif 0 in unique_bottom:
         guidance = "Bạn đang đứng trên vạch kẻ đường cho người đi bộ."
         return guidance
 
@@ -100,13 +99,13 @@ def analyze_position(pred):
         return cls in np.unique(region)
 
     # Ưu tiên hướng phải
-    if contains(right, 3):
+    if contains(right, 2):
         guidance += "Hãy đi về bên phải để lên vỉa hè."
-    elif contains(right, 1):
+    elif contains(right, 0):
         guidance += "Hãy đi về bên phải để tới vạch kẻ đường."
-    elif contains(left, 3):
+    elif contains(left, 2):
         guidance += "Hãy đi về bên trái để lên vỉa hè."
-    elif contains(left, 1):
+    elif contains(left, 0):
         guidance += "Hãy đi về bên trái để tới vạch kẻ đường."
     else:
         guidance += "Không tìm thấy vỉa hè hoặc vạch kẻ đường."
