@@ -113,7 +113,7 @@ def analyze_position(pred):
     return guidance
 
 
-def predict_image(img, device='cuda', num_classes=5):
+def predict_image(img, device='cuda', num_classes=4):
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
