@@ -14,7 +14,6 @@ from settings import BASE_DIR
 model_path = os.path.join(BASE_DIR, "app", "model", "deeplabv3plus_best.pth")
 model = load_model(model_path, num_classes=5)
 
-# Màu cho từng lớp (theo số lớp của bạn)
 COLORS = [
     (255, 255, 0),     # lớp 0
     (0, 255, 0),       # lớp 1
@@ -77,26 +76,30 @@ def show_prediction(model, dataset, device, idx=0, num_classes=5):
 
 def analyze_position(pred):
     h, w = pred.shape
-    bottom = pred[-h // 4:, :]
-    unique_classes = np.unique(bottom)
+    bottom = pred[-h // 4:, :]  # 1/4 dưới ảnh
 
-    if 2 in unique_classes:
-        guidance = "Cảnh báo: Bạn đang đứng trên đường xe chạy! "
-    elif 1 in unique_classes:
-        guidance = "Bạn đang đứng trên vạch kẻ đường cho người đi bộ."
-    elif 3 in unique_classes:
+    # Kiểm tra lớp trong vùng đáy
+    unique_bottom = np.unique(bottom)
+    
+    # Nếu đang đứng trên vỉa hè hoặc vạch kẻ đường
+    if 3 in unique_bottom:
         guidance = "Bạn đang đứng trên vỉa hè."
-    else:
-        guidance = "Không xác định được vị trí đứng."
+        return guidance
+    elif 1 in unique_bottom:
+        guidance = "Bạn đang đứng trên vạch kẻ đường cho người đi bộ."
+        return guidance
 
-    # Chia đôi ảnh
-    left = pred[:, :w//2]
-    right = pred[:, w//2:]
+    # Nếu không ở vị trí an toàn → tìm hướng di chuyển
+    guidance = "Đang ở khu vực không an toàn! "
+
+    # Chia ảnh theo chiều dọc làm 2 phần
+    left = pred[:, :w // 2]
+    right = pred[:, w // 2:]
 
     def contains(region, cls):
         return cls in np.unique(region)
 
-    # Ưu tiên phải trước
+    # Ưu tiên hướng phải
     if contains(right, 3):
         guidance += "Hãy đi về bên phải để lên vỉa hè."
     elif contains(right, 1):
@@ -106,7 +109,7 @@ def analyze_position(pred):
     elif contains(left, 1):
         guidance += "Hãy đi về bên trái để tới vạch kẻ đường."
     else:
-        guidance += "Không tìm thấy lối an toàn ở hai bên."
+        guidance += "Không tìm thấy vỉa hè hoặc vạch kẻ đường."
 
     return guidance
 
