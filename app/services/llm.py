@@ -39,70 +39,49 @@ def call_openrouter(user_prompt, sys_prompt, model="qwen3-1.7b", temperature=0.1
 # ===== 1. English sentence => Summarize + Polish => Translate to Vietnamese =====
 def polish_and_translate(sentence_en):
     user_prompt = f"""Input: {sentence_en} """
-    sys_prompt = (
-        f"""Bạn là một trợ lý thông minh và thân thiện, có nhiệm vụ xử lý câu tiếng Anh như sau:
+    sys_prompt = f"""Bạn là một trợ lý thông minh và thân thiện, có nhiệm vụ xử lý câu tiếng Anh như sau:
     Bước 1: Hiểu rõ nghĩa và ngữ cảnh của câu tiếng Anh.
     Bước 2: Viết lại một câu tiếng Việt tự nhiên, giữ nguyên ý nghĩa ban đầu.
     
     LƯU Ý: Chỉ trả về lời chào, lời chúc, và câu tiếng Việt tương đương và chú ý giữ cách xưng hô cho đúng từ đầu đến cuối. KHÔNG giải thích. KHÔNG bao gồm lại câu tiếng Anh.
     
     Format đầu ra:
-    - Bắt đầu bằng lời chào thân thiện và lời chúc tích cực.
-    - Sau đó là câu tiếng Việt tương đương với câu tiếng Anh đã cho bắt đầu bằng: "Phía trước bạn là ".
+    - Trực tiếp trả lời câu tiếng Việt tương đương với câu tiếng Anh đã cho bắt đầu bằng: "Phía trước bạn là ".
     
     Ví dụ:
     Input: A woman is cooking dinner in the kitchen.
     Output:
-    Xin chào bạn hiền! Chúc bạn một ngày tràn đầy năng lượng và cảm hứng! Phía trước bạn là một người phụ nữ đang nấu bữa tối trong bếp.
-    
+    Phía trước bạn là một người phụ nữ đang nấu bữa tối trong bếp.
     """
-    )
+
     return call_openrouter(user_prompt, sys_prompt)
 
 
 def answer_question_basic(question_vi):
-    greetings = [
-        "Xin chào chủ nhân thân mến!",
-        "Chào chủ nhân yêu quý!",
-        "Xin chào! Rất vui được hỗ trợ chủ nhân!",
-        "Xin chào, mình luôn sẵn sàng giúp chủ nhân!",
-        "Chào chủ nhân!"
-    ]
-
-    wishes = [
-        "Chúc chủ nhân một ngày an lành và tràn đầy năng lượng!",
-        "Mong chủ nhân luôn mạnh khỏe và hạnh phúc!",
-        "Chúc chủ nhân có thật nhiều niềm vui hôm nay!",
-        "Chúc chủ nhân luôn gặp may mắn và giữ vững tinh thần tích cực!",
-        "Chúc chủ nhân luôn được bao quanh bởi sự yêu thương và bình yên!"
-    ]
-
-    greeting = random.choice(greetings)
-    wish = random.choice(wishes)
     context = search_web(question_vi, top_k=5)
-
+    print("Context found:", context)
     user_prompt = f"Câu hỏi: {question_vi}. Thông tin tìm được: {context}"
-    sys_prompt = (
-        f"""Bạn là một trợ lý giọng nói thân thiện dành cho người khiếm thị. Khi nhận được câu hỏi từ người dùng, hãy làm theo các bước sau:
+    sys_prompt = f"""Bạn là trợ lý giọng nói tiếng Việt thân thiện dành cho người khiếm thị.
+    Khi có câu hỏi, hãy làm như sau:
 
-        1. Gửi lời chào thân thiện.
-        2. Gửi lời chúc tích cực, cổ vũ tinh thần.
-        3. Các đoạn thông tin có định dạng như sau:
-        " (**Số thứ tự**) Tiêu đề thông tin: **tiêu đề**. Nội dung thông tin: **nội dung**. Ngày đăng: **ngày đăng** ".
-        Dưới đây là 5 đoạn thông tin được tìm thấy từ internet. Một số thông tin có thể không chính xác hoặc không liên quan.
+    1. Đọc kỹ câu hỏi và tìm thông tin liên quan trong **5 đoạn thông tin** được cung cấp bên dưới.
+    2. Mỗi đoạn có định dạng như sau:
+    "(**Số thứ tự**) Tiêu đề thông tin: **tiêu đề**. Nội dung thông tin: **nội dung**. Ngày đăng: **ngày đăng**".
+    Dưới đây là 5 đoạn thông tin được tìm thấy từ internet. Một số thông tin có thể không chính xác hoặc không liên quan.
 
-        Hướng dẫn xử lý:
-        - Hãy **tổng hợp có chọn lọc** các thông tin liên quan để tạo ra câu trả lời ngắn gọn, đúng trọng tâm câu hỏi. Nếu nhiều đoạn cùng liên quan, hãy chọn lọc và tổng hợp chúng một cách mạch lạc, tự nhiên.
-        - Không chỉ chọn một đoạn thông tin duy nhất. Có thể dùng nhiều đoạn để tổng hợp nếu cần. Nếu nhiều đoạn cùng liên quan, hãy chọn lọc và tổng hợp chúng một cách mạch lạc, tự nhiên.
+    Hướng dẫn xử lý:
+    - Chỉ sử dụng tiếng Việt. Không dùng tiếng Anh, tiếng Trung hoặc từ viết tắt.
+     - Hãy **tổng hợp có chọn lọc** các thông tin liên quan để tạo ra câu trả lời ngắn gọn, đúng trọng tâm câu hỏi. Nếu nhiều đoạn cùng liên quan, hãy chọn lọc và tổng hợp chúng một cách mạch lạc, tự nhiên.
+    - Chọn lọc thông tin đúng nội dung câu hỏi, dựa theo **tiêu đề** và **nội dung**.
+    - Không chỉ chọn một đoạn thông tin duy nhất. Có thể dùng nhiều đoạn để tổng hợp nếu cần. Nếu nhiều đoạn cùng liên quan, hãy chọn lọc và tổng hợp chúng một cách mạch lạc, tự nhiên.
         - Nếu có mâu thuẫn giữa các thông tin, hãy **ưu tiên thông tin có ngày đăng mới nhất**.
         - Chỉ sử dụng thông tin thực sự liên quan đến câu hỏi, dựa trên **tiêu đề** hoặc **nội dung**. Bỏ qua những đoạn thông tin không liên quan đến câu hỏi (dựa vào tiêu đề hoặc nội dung).
-        - Giữ câu trả lời ngắn gọn, dễ hiểu, giọng điệu thân thiện, phù hợp với người khiếm thị, tránh dùng từ chuyên môn khó hiểu.
-
-        Trả lời theo mẫu sau:
-        {greeting}. {wish}. Câu trả lời cho câu hỏi "{question_vi}" là: trả lời tại đây."""
-    )
-    return call_openrouter(user_prompt, sys_prompt, model="deepseek-r1-distill-qwen-7b")
-
+    - Nếu có nhiều đoạn liên quan, hãy tổng hợp ngắn gọn và tự nhiên.
+    - Nếu thông tin mâu thuẫn, chọn đoạn có **ngày đăng mới hơn**.
+    - Bỏ qua thông tin không liên quan đến câu hỏi.
+    - Trả lời phải ngắn gọn, rõ ràng, dễ đọc to thành tiếng.
+    - Câu văn đơn giản, không dùng từ chuyên môn hoặc cấu trúc phức tạp."""
+    return call_openrouter(user_prompt, sys_prompt, model="qwen/qwen3-8b")
 
 def answer_question_about_time_and_weather(question):
     data = get_temperature_and_weather()
@@ -114,27 +93,24 @@ def answer_question_about_time_and_weather(question):
         Bạn là một trợ lý giọng nói thân thiện, tận tâm hỗ trợ người khiếm thị. Dựa trên dữ liệu thời tiết JSON dưới đây, hãy tạo một câu phản hồi ngắn gọn, dễ hiểu, tự nhiên và gần gũi để mô tả thời tiết hoặc thời gian hiện tại cho người dùng, đồng thời đưa ra một lời khuyên nhẹ nhàng về hoạt động phù hợp với điều kiện hôm nay.
         Hướng dẫn:
         - Xác định xem người dùng đang hỏi về **thời tiết** hay **thời gian**, và trả lời đúng theo yêu cầu.
-        - Nếu câu hỏi liên quan đến thời tiết, hãy mô tả trạng thái thời tiết bao gồm nhiệt độ và mô tả như: "trời mát mẻ", "có mây nhẹ", "trời nắng đẹp", "gió nhẹ", v.v. nếu phù hợp. Sau phần mô tả, hãy đưa ra một lời khuyên nhẹ nhàng, ví dụ:
-          + "Thời tiết rất thích hợp để đi dạo hoặc tập thể dục nhẹ ngoài trời."
-          + "Bạn nên mang theo ô nếu cần ra ngoài."
-          + "Hôm nay khá oi, bạn nhớ uống nhiều nước nhé."
+        - Nếu câu hỏi liên quan đến thời tiết, hãy mô tả trạng thái thời tiết bao gồm nhiệt độ và mô tả như: "trời mát mẻ", "có mây nhẹ", "trời nắng đẹp", "gió nhẹ", v.v. nếu phù hợp. Sau phần mô tả, hãy đưa ra một lời khuyên nhẹ nhàng về hoạt động phù hợp với thời tiết.
         - Nếu câu hỏi liên quan đến thời gian, hãy trả lời bằng giờ địa phương với cách diễn đạt đơn giản, ví dụ: "Bây giờ là 3 giờ chiều".
-        - Văn phong **ấm áp, thân thiện**, dễ hình dung bằng lời nói.
+        - Văn phong **hàm súc, cô đọng**, dễ hình dung bằng lời nói.
         - Không cần lặp lại nội dung JSON.
-        - Không giải thích lại yêu cầu.
+        - Không giải thích lại yêu cầu. 
         - Hãy trả lời bằng tiếng Việt 
         - Vì kết quả sử dụng để phát ra âm thanh nên hãy loại bỏ những kí tự đặc biệt như: *, #, @, $, %, ^, &, (, ), _, +, [, ], |, \, :, ;, ", ', <, >, ?, /, ~, `, "\n" 
-        Phản hồi mẫu cần bắt đầu bằng lời chào và lời chúc tích cực, sau đó đến phần trả lời chính.
+        Phản hồi mẫu cần ngắn gọn và trọng tâm.
         Ví dụ minh họa:
         Câu hỏi: "Hôm nay thời tiết thế nào?"
         Dữ liệu thời tiết JSON: {{ "temperature": 29, "description": "Nắng nhẹ", "wind": "gió nhẹ" }}
     
         Phản hồi mẫu:
-        "Chào bạn, chúc bạn một ngày thật vui vẻ nhé. Hôm nay trời nắng nhẹ, nhiệt độ khoảng 29 độ C, có gió nhẹ nên rất dễ chịu. Thời tiết rất thích hợp để đi dạo hoặc tập thể dục nhẹ ngoài trời."
+        "Hôm nay trời nắng nhẹ, nhiệt độ khoảng 29 độ C, có gió nhẹ nên rất dễ chịu. Thời tiết rất thích hợp để đi dạo hoặc tập thể dục nhẹ ngoài trời."
     
         Câu hỏi: "Mấy giờ rồi?"
         Phản hồi mẫu:
-        "Xin chào bạn, hiện tại là 2 giờ 15 phút chiều. Chúc bạn buổi chiều thật thư giãn và tràn đầy năng lượng nhé."
+        "hiện tại là 2 giờ 15 phút chiều."
     
         Bây giờ hãy tạo câu trả lời phù hợp dựa trên dữ liệu thời tiết và câu hỏi người dùng.
         """
@@ -176,10 +152,6 @@ def analyze_intent(question: str):
        - Mọi yêu cầu còn lại không thuộc 3 nhóm trên, như: yêu cầu thực hiện hành động, điều khiển thiết bị, gửi lời nhắc, nhắn tin, mở đèn, báo thức, v.v.  
        - Ví dụ: "Mở đèn", "Nhắc tôi uống thuốc", "Gửi tin nhắn", "Đọc email"
     
-    
-
-
-
     **Chỉ trả về kết quả phân loại. Không trả lời thêm bất kỳ nội dung nào khác. Không lặp lại câu hỏi người dùng. Không giải thích.**
     """
 
@@ -268,7 +240,7 @@ def answer_question_street_status(question: str):
         - Loại đường
         - Tốc độ hiện tại vs tốc độ lý tưởng
         - Mức độ tắc nghẽn
-        - Danh sách các sự cố (nếu có)
+        - Danh sách các sự cố (nếu có
         
         Bạn cần:
         1. Mô tả ngắn gọn tình trạng hiện tại của đường (ví dụ: "đang kẹt xe nhẹ", "giao thông thông thoáng", ...)

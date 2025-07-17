@@ -84,30 +84,17 @@ async def detect_objects(image: UploadFile = File(...)):
     class_names = model.names
 
     class_translations = {
-        "Ground Animal": "Động vật trên mặt đất",
-        "Fence": "Hàng rào",
-        "Guard Rail": "Lan can bảo vệ",
         "Barrier": "Rào chắn",
-        "Person": "Người",
-        "Bicyclist": "Người đi xe đạp",
-        "Motorcyclist": "Người đi xe máy",
-        "Other Rider": "Người điều khiển xe",
-        "Vegetation": "Cây cối",
-        "Bench": "Ghế dài",
-        "Fire Hydrant": "Vòi chữa cháy",
-        "Mailbox": "Hộp thư",
-        "Manhole": "Nắp cống",
-        "Pothole": "Ổ gà",
-        "Street Light": "Đèn đường",
-        "Pole": "Cột",
-        "Utility Pole": "Cột điện",
-        "Trash Can": "Thùng rác",
         "Bicycle": "Xe đạp",
         "Bus": "Xe buýt",
         "Car": "Xe ô tô",
         "Motorcycle": "Xe máy",
-        "Other Vehicle": "Phương tiện khác",
-        "Truck": "Xe tải"
+        "Person": "Người",
+        "Pole": "Cột",
+        "Signboard": "Biển hiệu",        
+        "Trash Can": "Thùng rác",
+        "Truck": "Xe tải",
+        "Vegetation": "Cây cối"
     }
     class_translations_en = {k: k for k, v in class_translations.items() if v is not None}
 
@@ -148,7 +135,7 @@ async def detect_objects(image: UploadFile = File(...)):
     _, img_encoded = cv2.imencode('.jpg', img)
 
     if closest_object is None:
-        return JSONResponse(content={"data": "No object detected."}, status_code=200)
+        return JSONResponse(content={"data": "Không nhận diện được vật cản nào"}, status_code=200)
 
     text = f"Có {closest_object['label']} {closest_object['direction']}"
     return {

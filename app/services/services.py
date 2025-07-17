@@ -68,6 +68,7 @@ def get_traffic_data(address):
     radius = 1000  # bán kính 1km
     lat = data["results"][0]["position"]["lat"]
     lon = data["results"][0]["position"]["lon"]
+    print(f"Vị trí: {address_name}, Tọa độ: ({lat}, {lon})")
 
     url = "https://api.tomtom.com/traffic/services/5/incidentDetails"
     params = {

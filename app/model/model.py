@@ -2,10 +2,11 @@ import torch
 import segmentation_models_pytorch as smp
 import time
 
-def load_model(weights_path, num_classes=5):
+# Hàm load model
+def load_model(weights_path, num_classes=4):
     model = smp.DeepLabV3Plus(
         encoder_name='mobilenet_v2',
-        encoder_weights=None,
+        encoder_weights=None,  
         in_channels=3,
         classes=num_classes,
     )
@@ -13,15 +14,11 @@ def load_model(weights_path, num_classes=5):
     model.eval().to('cuda')
     return model
 
+# Hàm đo thời gian suy luận
 @torch.no_grad()
 def infer_and_measure(model, image_tensor):
-    """
-    image_tensor: Tensor of shape (1, 3, H, W), already normalized & to(device)
-    Returns: output prediction, and inference time in milliseconds
-    """
     start = time.time()
     output = model(image_tensor)
     end = time.time()
-
     infer_time_ms = (end - start) * 1000  # milliseconds
     return output, infer_time_ms
