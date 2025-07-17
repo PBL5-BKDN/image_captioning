@@ -2,11 +2,10 @@ import torch
 import segmentation_models_pytorch as smp
 import time
 
-# Hàm load model
 def load_model(weights_path, num_classes=4):
     model = smp.DeepLabV3Plus(
         encoder_name='mobilenet_v2',
-        encoder_weights=None,  
+        encoder_weights=None,
         in_channels=3,
         classes=num_classes,
     )
